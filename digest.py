@@ -1,42 +1,30 @@
-h0 = "01100111010001010010001100000001"
-h1 = "11101111110011011010101110001001"
-h2 = "10011000101110101101110011111110"
-h3 = "00010000001100100101010001110110"
-h4 = "11000011110100101110000111110000"
-
-a = h0
-b = h1
-c = h2
-d = h3
-e = h4
-
-def digest(word_list):
+def digest(word_list, h):
 
     # Raise exception if input word_list does not have correct amount of words
     if len(word_list) != 80:
         raise ValueError("Inputted list of words must have 80 words, but instead has {} words".format(str(len(word_list))))
 
-    global a
-    global b
-    global c
-    global d
-    global e
+    a = h[0]
+    b = h[1]
+    c = h[2]
+    d = h[3]
+    e = h[4]
     
     
     # Determine which function to use depending on the posisition of the word in word_list
     for i in range(len(word_list)):
 
         if i <= 19:
-            fk = _f1(word_list[i])
+            fk = _f1(word_list[i], a,b,c,d)
 
         elif i <= 39:
-            fk = _f2(word_list[i])
+            fk = _f2(word_list[i], a,b,c,d)
 
         elif i <= 59:
-            fk = _f3(word_list[i])
+            fk = _f3(word_list[i], a,b,c,d)
 
         else:
-            fk = _f4(word_list[i])
+            fk = _f4(word_list[i], a,b,c,d)
 
         # temp = (a left rotate 5) + f + e + k + current word
         temp = bin(int(_left_rotate(a, 5), 2) + fk[0] + int(e,2) + fk[1] + int(word_list[i], 2))[2:]
@@ -52,35 +40,22 @@ def digest(word_list):
         a = temp                # a = temp
 
 
-    # 5 parts of the digest, which will be combined, unless they are longer than 32 bits each,
-    # in which case they will be truncated first and then combined.
-    global h0
-    global h1
-    global h2
-    global h3
-    global h4
-    h0 = _truncate(bin(int(h0, 2) + int(a, 2))[2:], 32)
-    h1 = _truncate(bin(int(h1, 2) + int(b, 2))[2:], 32)
-    h2 = _truncate(bin(int(h2, 2) + int(c, 2))[2:], 32)
-    h3 = _truncate(bin(int(h3, 2) + int(d, 2))[2:], 32)
-    h4 = _truncate(bin(int(h4, 2) + int(e, 2))[2:], 32)
-    
-    # Convert 5 parts to hex and combine
-    hh = hex(int(h0,2))[2:] + hex(int(h1,2))[2:] + hex(int(h2,2))[2:] + hex(int(h3,2))[2:] + hex(int(h4,2))[2:]
+    # 5 parts of the digest, which will be combined after each chunk in sha.py is digested
+    h[0] = _truncate(bin(int(h[0], 2) + int(a, 2))[2:], 32)
+    h[1] = _truncate(bin(int(h[1], 2) + int(b, 2))[2:], 32)
+    h[2] = _truncate(bin(int(h[2], 2) + int(c, 2))[2:], 32)
+    h[3] = _truncate(bin(int(h[3], 2) + int(d, 2))[2:], 32)
+    h[4] = _truncate(bin(int(h[4], 2) + int(e, 2))[2:], 32)
 
-    return hh
+
+    return h
 
 
     
 
 
 
-def _f1(word):
-
-    global a
-    global b
-    global c
-    global d
+def _f1(word, a, b, c, d):
 
     # f = (b AND c) OR (!b AND c)
     f = (int(b,2) & int(c,2)) | ((~int(b,2)) & int(d,2))
@@ -91,12 +66,7 @@ def _f1(word):
 
 
 
-def _f2(word):
-
-    global a
-    global b
-    global c
-    global d
+def _f2(word, a, b, c, d):
 
     # f = b XOR c XOR d
     f = int(b,2) ^ int(c,2) ^ int(d,2)
@@ -107,12 +77,7 @@ def _f2(word):
 
 
 
-def _f3(word):
-
-    global a
-    global b
-    global c
-    global d
+def _f3(word, a, b, c, d):
 
     # f = (b AND c) OR (b AND d) OR (c AND d)
     f = (int(b,2) & int(c,2)) | (int(b,2) & int(d,2)) | (int(c,2) & int(d,2))
@@ -123,12 +88,7 @@ def _f3(word):
 
 
 
-def _f4(word):
-
-    global a
-    global b
-    global c
-    global d
+def _f4(word, a, b, c, d):
 
     # f = b XOR c XOR d
     f = int(b,2) ^ int(c,2) ^ int(d,2)
@@ -156,4 +116,3 @@ def _truncate(binary_string, desired_amount):
                                                                                                                               str(len(binary_string))))
 
     return binary_string[len(binary_string)-desired_amount:]
-
