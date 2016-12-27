@@ -1,6 +1,4 @@
-def digest(word_list, h):
-
-    # Raise exception if input word_list does not have correct amount of words
+# Raise exception if input word_list does not have correct amount of words
     if len(word_list) != 80:
         raise ValueError("Inputted list of words must have 80 words, but instead has {} words".format(str(len(word_list))))
 
