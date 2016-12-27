@@ -22,7 +22,7 @@ def expand_chunk(string_512bits):
         word_list.append(string_512bits[i:i+32])
 
 
-    # Iterate through word_list, starting at 16 and ending after 79.
+    # Iterate through word_list, starting at 16 and ending at 79.
     # Select the words that are at i-3, i-8, i-14, and i-16 for each iteration.
     for i in range(16, 80, 1):
         word1 = int(word_list[i-3], 2)
