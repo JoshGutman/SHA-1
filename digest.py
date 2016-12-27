@@ -1,4 +1,6 @@
-# Raise exception if input word_list does not have correct amount of words
+def digest(word_list, h):
+
+    # Raise exception if input word_list does not have correct amount of words
     if len(word_list) != 80:
         raise ValueError("Inputted list of words must have 80 words, but instead has {} words".format(str(len(word_list))))
 
@@ -110,7 +112,6 @@ def _left_rotate(binary_string, amount):
 def _truncate(binary_string, desired_amount):
 
     if len(binary_string) < desired_amount:
-        raise ValueError("Could not truncate {} -- desired amount \"{}\" is greater than length of binary string ({})".format(binary_string, desired_amount,
-                                                                                                                              str(len(binary_string))))
-
+        return binary_string.zfill(desired_amount - len(binary_string))
+  
     return binary_string[len(binary_string)-desired_amount:]
