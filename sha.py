@@ -1,12 +1,8 @@
-from expand_chunk import expand_chunk
-from digest import digest
-
-
-def sha(message):
+ef sha(message):
 
     # 64-bit binary string of the amount of bits in the original message
     message_length = bin(len(message) * 8)[2:].zfill(64)
-
+    
 
     # Convert inputted message to binary
     bin_message = _ascii_to_bin(message)
@@ -17,15 +13,14 @@ def sha(message):
     
 
     # Pad binary number with zeros until its length is congruent to 448 mod 512
-    amount_zeros = 448 - (len(bin_message) % 512)
-    for i in range(amount_zeros):
+    while len(bin_message)%512 != 448:
         bin_message += "0"
 
 
     # Append the 64-bit length of original message.
     # Message length in bits should now be a multiple of 512.
     bin_message += message_length
-
+    
 
     # Break binary message up into 512 bit chunks
     chunk_list = []
@@ -50,7 +45,7 @@ def sha(message):
     # Create final hash by combine the parts in h_list
     hh = ""
     for h in h_list:
-        hh += hex(int(h,2))[2:].zfill(8)
+        hh += hex(int(h,2))[2:]
 
     
     return hh
