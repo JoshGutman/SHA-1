@@ -50,7 +50,7 @@ def sha(message):
     # Create final hash by combine the parts in h_list
     hh = ""
     for h in h_list:
-        hh += hex(int(h,2))[2:]
+        hh += hex(int(h,2))[2:].zfill(8)
 
     
     return hh
