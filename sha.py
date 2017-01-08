@@ -1,4 +1,7 @@
-ef sha(message):
+from expand_chunk import expand_chunk
+from digest import digest
+
+def sha(message):
 
     # 64-bit binary string of the amount of bits in the original message
     message_length = bin(len(message) * 8)[2:].zfill(64)
